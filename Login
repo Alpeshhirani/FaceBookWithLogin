@@ -1,0 +1,38 @@
+public class LoginActivity extends BaseActivity {
+    public FaceBookLogin faceBookLogin = new FaceBookLogin();;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+//        Utils.getHashKey(this);
+
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"/*, "user_friends"*/));
+        faceBookLogin.createLogin(new FaceBookLogin.LoginCallback() {
+            @Override
+            public void onSuccess(FacebookLoginResponse response) {
+                log.LOGE(response.toString());
+            }
+
+            @Override
+            public void onCancel() {
+                log.LOGE("User Cancel Facebook Login");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                log.LOGE(exception.getMessage());
+            }
+        });
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (faceBookLogin.getCallbackManager().onActivityResult(requestCode, resultCode, data)) {
+            return;
+        }
+    }
+}
